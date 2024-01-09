@@ -1,0 +1,19 @@
+[versions]
+agp = "8.1.2"
+kotlin = "1.9.21"
+coroutines = "1.7.3"
+androidxactivity = "1.8.2"
+appcompat = "1.6.1"
+androidPictureSelector = "v3.11.2"
+[plugins]
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+[libraries]
+exifInterface = { module = "androidx.exifinterface:exifinterface", version = "1.3.7" }
+androidx-activity-activity = { module = "androidx.activity:activity", version.ref = "androidxactivity" }
+kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+
+pictureselector = { group = "io.github.lucksiege", name = "pictureselector", version.ref = "androidPictureSelector" }
+pictureselector-compress = { group = "io.github.lucksiege", name = "compress", version.ref = "androidPictureSelector" }
+pictureselector-ucrop = { group = "io.github.lucksiege", name = "ucrop", version.ref = "androidPictureSelector" }
