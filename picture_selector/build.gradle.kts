@@ -1,11 +1,19 @@
 plugins {
     id("com.android.library")
     kotlin("multiplatform")
+    kotlin("native.cocoapods")
     id("maven-publish")
 }
 
 kotlin{
-    withSourcesJar(publish = false)
+//    withSourcesJar(publish = false)
+    cocoapods {
+        version = "1.0.0"
+        ios.deploymentTarget = "12.0"
+        pod("TZImagePickerController/Basic") {
+            version = "~> 3.8.4"
+        }
+    }
     androidTarget {
         compilations.all {
             kotlinOptions {
@@ -13,7 +21,7 @@ kotlin{
             }
         }
         publishLibraryVariants("release", "debug")
-        publishLibraryVariantsGroupedByFlavor = true
+//        publishLibraryVariantsGroupedByFlavor = true
     }
     listOf(
         iosX64(),
@@ -42,7 +50,7 @@ kotlin{
 }
 
 android {
-    compileSdk = 30
+    compileSdk = 33
     namespace = "com.usecase.picture_select"
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
@@ -54,15 +62,13 @@ android {
     }
 }
 
-group = "com.usecase.picture_selector"
+group="com.hellomr3"
 version = "1.0.0"
 
 publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = "com.usecase.picture_selector"
-            artifactId = "picture_selector"
-            version = "1.0.0"
+    publishing{
+        repositories {
+            mavenLocal()
         }
     }
 }
