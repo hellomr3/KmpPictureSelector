@@ -1,3 +1,5 @@
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -14,3 +16,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "KmmPictureSelect"
 include(":picture_selector")
+include(":sample")
+include(":sample:androidApp")

@@ -1,37 +1,37 @@
 plugins {
     id("com.android.library")
     kotlin("multiplatform")
-    kotlin("native.cocoapods")
+//    kotlin("native.cocoapods")
     id("maven-publish")
 }
 
 kotlin{
 //    withSourcesJar(publish = false)
-    cocoapods {
-        version = "1.0.0"
-        ios.deploymentTarget = "12.0"
-        pod("TZImagePickerController/Basic") {
-            version = "~> 3.8.4"
-        }
-    }
+//    cocoapods {
+//        version = "1.0.0"
+//        ios.deploymentTarget = "12.0"
+//        pod("TZImagePickerController/Basic") {
+//            version = "~> 3.8.4"
+//        }
+//    }
     androidTarget {
         compilations.all {
             kotlinOptions {
-                jvmTarget = "1.8"
+                jvmTarget = "17"
             }
         }
         publishLibraryVariants("release", "debug")
 //        publishLibraryVariantsGroupedByFlavor = true
     }
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach {
-        it.binaries.framework {
-            baseName = "shared"
-        }
-    }
+//    listOf(
+//        iosX64(),
+//        iosArm64(),
+//        iosSimulatorArm64()
+//    ).forEach {
+//        it.binaries.framework {
+//            baseName = "shared"
+//        }
+//    }
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -51,15 +51,16 @@ kotlin{
 
 android {
     compileSdk = 33
-    namespace = "com.usecase.picture_select"
+    namespace = "com.usecase.picture_selector"
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
         minSdk = 21
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+
 }
 
 group="com.hellomr3"
