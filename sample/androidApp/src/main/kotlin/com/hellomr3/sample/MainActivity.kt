@@ -6,8 +6,10 @@ import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.usecase.picture_selector.BitmapImpl
 import com.usecase.picture_selector.BitmapUtils
 import com.usecase.picture_selector.Media
+import com.usecase.picture_selector.PictureSelectParams
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import pictureSelect
@@ -25,13 +27,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         findViewById<View>(R.id.btnSelectPicture).setOnClickListener {
             lifecycleScope.launch {
-                val media = pictureSelect.selectPhoto().firstOrNull()?.getOrNull()?.firstOrNull()
+                val media = pictureSelect.selectPhoto(params = PictureSelectParams(maxImageNum = 3, maxVideoNum = 1))
+                    .firstOrNull()?.getOrNull()?.firstOrNull()
                 displayImage(media)
             }
         }
         findViewById<View>(R.id.btnTakePicture).setOnClickListener {
             lifecycleScope.launch {
-                val media = pictureSelect.takePhoto().firstOrNull()?.getOrNull()?.firstOrNull()
+                val media = pictureSelect.takePhoto(params = PictureSelectParams(maxImageNum = 1))
+                    .firstOrNull()?.getOrNull()?.firstOrNull()
                 displayImage(media)
             }
         }
@@ -39,12 +43,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun displayImage(media: Media?) {
         media ?: return
-        Log.e("TAG", "$media")
         findViewById<ImageView>(R.id.img).setImageBitmap(
-            BitmapUtils.getBitmapForStream(
-                ByteArrayInputStream(media.preview.toByteArray()),
-                100
-            )
+            (media.preview as BitmapImpl).platformBitmap
         )
     }
 }

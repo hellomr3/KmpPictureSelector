@@ -24,7 +24,7 @@ kotlin{
 }
 
 android {
-    compileSdk = 33
+    compileSdk = 34
     namespace = "com.hellomr3.sample"
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {

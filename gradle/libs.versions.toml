@@ -5,6 +5,8 @@ coroutines = "1.7.3"
 androidxactivity = "1.8.2"
 appcompat = "1.6.1"
 androidPictureSelector = "v3.11.2"
+coil3 = "3.0.0-alpha01"
+ktor = "2.3.7"
 [plugins]
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
@@ -17,3 +19,9 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 pictureselector = { group = "io.github.lucksiege", name = "pictureselector", version.ref = "androidPictureSelector" }
 pictureselector-compress = { group = "io.github.lucksiege", name = "compress", version.ref = "androidPictureSelector" }
 pictureselector-ucrop = { group = "io.github.lucksiege", name = "ucrop", version.ref = "androidPictureSelector" }
+
+ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+
+coil3 = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil3" }
+coil3-network = { group = "io.coil-kt.coil3", name = "coil-network", version.ref = "coil3" }

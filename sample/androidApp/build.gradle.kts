@@ -1,7 +1,3 @@
-import org.jetbrains.kotlin.config.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
-import org.jetbrains.kotlin.konan.util.visibleName
-
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -9,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.hellomr3.sample"
-    compileSdk = 33
+    compileSdk = 34
     defaultConfig {
         minSdk = 21
     }

@@ -1,9 +1,10 @@
 package com.usecase.picture_selector
 
-import android.net.Uri
+import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.FileProvider
-import androidx.core.net.toUri
+import com.luck.picture.lib.basic.PictureSelectionCameraModel
+import com.luck.picture.lib.basic.PictureSelectionModel
 import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.SelectMimeType
 import com.luck.picture.lib.entity.LocalMedia
@@ -14,8 +15,6 @@ import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
-import java.io.File
-import java.io.InputStream
 
 
 /**
@@ -26,15 +25,15 @@ import java.io.InputStream
 class PictureSelectImpl constructor(
     private val activity: AppCompatActivity,
 ) : IPictureSelect {
-    override fun takePhoto(): Flow<Result<List<Media>>> {
+    override fun takePhoto(params: PictureSelectParams): Flow<Result<List<Media>>> {
         return callbackFlow {
             PictureSelector.create(activity)
-                .openCamera(SelectMimeType.ofImage())
+                .openCamera(params.asChooseMode())
                 .setSandboxFileEngine { context, srcPath, mineType, call ->
                     if (call != null) {
                         val sandboxPath =
                             SandboxTransformUtils.copyPathToSandbox(context, srcPath, mineType)
-                        call.onCallback(srcPath, sandboxPath);
+                        call.onCallback(srcPath, sandboxPath)
                     }
                 }
                 .forResult(object : OnResultCallbackListener<LocalMedia?> {
@@ -58,10 +57,10 @@ class PictureSelectImpl constructor(
             }
     }
 
-    override fun selectPhoto(): Flow<Result<List<Media>>> {
+    override fun selectPhoto(params: PictureSelectParams): Flow<Result<List<Media>>> {
         return callbackFlow {
             PictureSelector.create(activity)
-                .openSystemGallery(SelectMimeType.ofImage())
+                .openGallery(params.asChooseMode())
                 .setSandboxFileEngine { context, srcPath, mineType, call ->
                     if (call != null) {
                         val sandboxPath =
@@ -69,7 +68,11 @@ class PictureSelectImpl constructor(
                         call.onCallback(srcPath, sandboxPath)
                     }
                 }
-                .forSystemResult(object : OnResultCallbackListener<LocalMedia?> {
+                .setMaxSelectNum(params.maxImageNum)
+                .setMaxVideoSelectNum(params.maxVideoNum)
+                .setSelectMaxFileSize(params.maxFileKbSize)
+                .setImageEngine(CoilEngine())
+                .forResult(object : OnResultCallbackListener<LocalMedia?> {
                     override fun onResult(result: ArrayList<LocalMedia?>) {
                         val mediaList = result.mapNotNull { localMedia ->
                             localMedia.asMedia()
@@ -87,15 +90,27 @@ class PictureSelectImpl constructor(
             }
         }
             .catch { e ->
+                Log.e("TAG","error:$e")
                 emit(Result.failure(e))
             }
+    }
+
+    private fun PictureSelectParams.asChooseMode(): Int {
+        require(this.maxImageNum != 0 || this.maxVideoNum != 0)
+        return if (this.maxImageNum > 0 && this.maxVideoNum > 0) {
+            SelectMimeType.ofAll()
+        } else if (this.maxVideoNum > 0) {
+            SelectMimeType.ofVideo()
+        } else {
+            SelectMimeType.ofImage()
+        }
     }
 
     private fun LocalMedia?.asMedia(): Media? {
         if (this == null) {
             return null
         }
-        val bitmap = BitmapUtils.getBitmapForStream(inputStream = File(this.availablePath).inputStream(), 100) ?: return null
+        val bitmap = BitmapFactory.decodeFile(this.availablePath)
         return Media(
             name = this.fileName,
             path = this.availablePath,

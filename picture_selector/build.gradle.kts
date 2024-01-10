@@ -44,13 +44,16 @@ kotlin{
                 implementation(libs.exifInterface)
                 implementation(libs.pictureselector)
                 implementation(libs.pictureselector.compress)
+                implementation(libs.coil3)
+                implementation(libs.coil3.network)
+                implementation(libs.ktor.client.android)
             }
         }
     }
 }
 
 android {
-    compileSdk = 33
+    compileSdk = 34
     namespace = "com.usecase.picture_selector"
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     defaultConfig {
