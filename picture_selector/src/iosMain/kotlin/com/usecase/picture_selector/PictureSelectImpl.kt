@@ -7,7 +7,6 @@ import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
-import platform.Photos.PHAsset
 import platform.UIKit.UIImage
 import platform.UIKit.UIViewController
 
@@ -15,7 +14,7 @@ import platform.UIKit.UIViewController
 class PictureSelectImpl constructor(private val currentController: UIViewController?) :
     IPictureSelect {
 
-    override fun takePhoto(): Flow<Result<List<Media>>> {
+    override fun takePhoto(params: PictureSelectParams): Flow<Result<List<Media>>> {
         return callbackFlow<Result<List<Media>>> {
             val controller = TZImagePickerController(9, delegate = null)
             controller.didFinishPickingPhotosHandle = { p0, p1, _ ->
@@ -43,7 +42,7 @@ class PictureSelectImpl constructor(private val currentController: UIViewControl
         }
     }
 
-    override fun selectPhoto(): Flow<Result<List<Media>>> {
+    override fun selectPhoto(params: PictureSelectParams): Flow<Result<List<Media>>> {
         return callbackFlow<Result<List<Media>>> {
             val controller = TZImagePickerController(9, delegate = null)
             controller.didFinishPickingPhotosHandle = { p0, p1, _ ->

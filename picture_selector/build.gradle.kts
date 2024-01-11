@@ -1,19 +1,19 @@
 plugins {
     id("com.android.library")
     kotlin("multiplatform")
-//    kotlin("native.cocoapods")
+    kotlin("native.cocoapods")
     id("maven-publish")
 }
 
 kotlin{
 //    withSourcesJar(publish = false)
-//    cocoapods {
-//        version = "1.0.0"
-//        ios.deploymentTarget = "12.0"
-//        pod("TZImagePickerController/Basic") {
-//            version = "~> 3.8.4"
-//        }
-//    }
+    cocoapods {
+        version = "1.0.0"
+        ios.deploymentTarget = "12.0"
+        pod("TZImagePickerController/Basic") {
+            version = "~> 3.8.4"
+        }
+    }
     androidTarget {
         compilations.all {
             kotlinOptions {
@@ -23,15 +23,15 @@ kotlin{
         publishLibraryVariants("release", "debug")
 //        publishLibraryVariantsGroupedByFlavor = true
     }
-//    listOf(
-//        iosX64(),
-//        iosArm64(),
-//        iosSimulatorArm64()
-//    ).forEach {
-//        it.binaries.framework {
-//            baseName = "shared"
-//        }
-//    }
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach {
+        it.binaries.framework {
+            baseName = "shared"
+        }
+    }
     sourceSets {
         val commonMain by getting {
             dependencies {
