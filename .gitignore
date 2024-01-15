@@ -6,3 +6,4 @@ build
 .idea
 .gradle
 /.idea/
+/sample/iosApp/Pods/

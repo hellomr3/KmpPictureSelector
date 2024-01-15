@@ -14,7 +14,8 @@ dependencyResolutionManagement {
     }
 }
 
+
 rootProject.name = "KmmPictureSelect"
 include(":picture_selector")
-include(":sample")
+include(":sample:shared")
 include(":sample:androidApp")

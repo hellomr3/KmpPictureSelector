@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     kotlin("android")
+    id("org.jetbrains.compose")
 }
 
 android {
@@ -30,11 +31,10 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    buildFeatures {
-        dataBinding = true
-    }
 }
 dependencies {
-    implementation(projects.sample)
+    implementation(projects.sample.shared)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.activity.activity)
+    implementation(libs.androidx.activity.compose)
 }

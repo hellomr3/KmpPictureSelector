@@ -16,7 +16,7 @@ class PictureSelectImpl constructor(private val currentController: UIViewControl
 
     override fun takePhoto(params: PictureSelectParams): Flow<Result<List<Media>>> {
         return callbackFlow<Result<List<Media>>> {
-            val controller = TZImagePickerController(9, delegate = null)
+            val controller = TZImagePickerController(params.maxImageNum.toLong(), delegate = null)
             controller.didFinishPickingPhotosHandle = { p0, p1, _ ->
                 val images = p0?.mapNotNull {
                     it as? UIImage
@@ -44,7 +44,7 @@ class PictureSelectImpl constructor(private val currentController: UIViewControl
 
     override fun selectPhoto(params: PictureSelectParams): Flow<Result<List<Media>>> {
         return callbackFlow<Result<List<Media>>> {
-            val controller = TZImagePickerController(9, delegate = null)
+            val controller = TZImagePickerController(params.maxImageNum.toLong(), delegate = null)
             controller.didFinishPickingPhotosHandle = { p0, p1, _ ->
                 val images = p0?.mapNotNull {
                     it as? UIImage
