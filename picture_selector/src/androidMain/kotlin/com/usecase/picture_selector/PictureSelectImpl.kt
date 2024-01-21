@@ -3,18 +3,22 @@ package com.usecase.picture_selector
 import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.luck.picture.lib.basic.PictureSelectionCameraModel
-import com.luck.picture.lib.basic.PictureSelectionModel
 import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.SelectMimeType
+import com.luck.picture.lib.engine.CompressFileEngine
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.interfaces.OnResultCallbackListener
 import com.luck.picture.lib.utils.SandboxTransformUtils
+import com.usecase.picture_selector.engine.CoilEngine
+import com.usecase.picture_selector.engine.CompressEngine
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
+import top.zibin.luban.Luban
+import top.zibin.luban.OnNewCompressListener
+import java.io.File
 
 
 /**
@@ -36,6 +40,7 @@ class PictureSelectImpl constructor(
                         call.onCallback(srcPath, sandboxPath)
                     }
                 }
+                .setCompressEngine(CompressEngine(params.maxImageNum))
                 .forResult(object : OnResultCallbackListener<LocalMedia?> {
                     override fun onResult(result: ArrayList<LocalMedia?>) {
                         val mediaList = result.mapNotNull { localMedia ->
@@ -70,8 +75,9 @@ class PictureSelectImpl constructor(
                 }
                 .setMaxSelectNum(params.maxImageNum)
                 .setMaxVideoSelectNum(params.maxVideoNum)
-                .setSelectMaxFileSize(params.maxFileKbSize)
+//                .setSelectMaxFileSize(params.maxFileKbSize)
                 .setImageEngine(CoilEngine())
+                .setCompressEngine(CompressEngine(params.maxImageNum))
                 .forResult(object : OnResultCallbackListener<LocalMedia?> {
                     override fun onResult(result: ArrayList<LocalMedia?>) {
                         val mediaList = result.mapNotNull { localMedia ->
@@ -90,7 +96,7 @@ class PictureSelectImpl constructor(
             }
         }
             .catch { e ->
-                Log.e("TAG","error:$e")
+                Log.e("TAG", "error:$e")
                 emit(Result.failure(e))
             }
     }
