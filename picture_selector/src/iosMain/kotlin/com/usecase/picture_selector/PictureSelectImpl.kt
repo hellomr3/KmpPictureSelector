@@ -7,7 +7,11 @@ import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
+import platform.CoreGraphics.CGFloat
+import platform.Foundation.NSHomeDirectory
+import platform.Foundation.writeToFile
 import platform.UIKit.UIImage
+import platform.UIKit.UIImageJPEGRepresentation
 import platform.UIKit.UIViewController
 
 @OptIn(ExperimentalForeignApi::class)
@@ -72,6 +76,17 @@ class PictureSelectImpl constructor(private val currentController: UIViewControl
 
     private fun UIImage?.asMedia(): Media? {
         if (this == null) return null
-        return Media("", "", BitmapImpl(this))
+        val sandboxImagePath = save2Sandbox(image = this, present = 1.0, imageName = "xxx.jpeg")
+        return Media("", path = sandboxImagePath, BitmapImpl(this))
+    }
+
+    /**
+     * 图片保存到沙盒
+     */
+    private fun save2Sandbox(image: UIImage, present: Double, imageName: String): String {
+        val imageData = UIImageJPEGRepresentation(image = image, compressionQuality = present)
+        val fullPath = NSHomeDirectory() + "/Images/" + imageName
+        imageData?.writeToFile(path = fullPath, atomically = true)
+        return fullPath
     }
 }
