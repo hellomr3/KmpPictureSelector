@@ -1,4 +1,4 @@
 import com.usecase.picture_selector.IPictureSelect
-import com.usecase.picture_selector.PictureSelectImpl
+import com.usecase.picture_selector.AndroidPictureSelect
 
-actual val pictureSelect: IPictureSelect = PictureSelectImpl(ActivityManager.getCurrentActivity())
+actual val pictureSelect: IPictureSelect = AndroidPictureSelect(ActivityManager.getCurrentActivity())

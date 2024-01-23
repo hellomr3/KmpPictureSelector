@@ -49,7 +49,7 @@ fun App() {
             }
             Text("path:${pictureMedia?.path}")
             AsyncImage(
-                model = pictureMedia?.path,
+                model = pictureMedia?.preview?.toByteArray(),
                 contentDescription = "Image",
                 modifier = Modifier.fillMaxWidth().wrapContentHeight()
             )

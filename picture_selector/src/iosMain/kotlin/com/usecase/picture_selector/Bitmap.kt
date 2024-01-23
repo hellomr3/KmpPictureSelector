@@ -3,35 +3,38 @@ package com.usecase.picture_selector
 import kotlinx.cinterop.*
 import platform.CoreGraphics.CGRectMake
 import platform.CoreGraphics.CGSizeMake
+import platform.Foundation.NSData
 import platform.Foundation.base64EncodedStringWithOptions
+import platform.Foundation.dataWithContentsOfFile
 import platform.UIKit.UIGraphicsBeginImageContextWithOptions
 import platform.UIKit.UIGraphicsEndImageContext
 import platform.UIKit.UIGraphicsGetImageFromCurrentImageContext
 import platform.UIKit.UIImage
 import platform.UIKit.UIImageJPEGRepresentation
 
-class BitmapImpl(private val image: UIImage) : Bitmap {
+class IOSBitmap(
+    private val sandboxPath: String
+) : Bitmap {
 
     @OptIn(ExperimentalForeignApi::class)
     override fun toByteArray(): ByteArray {
-        val imageData = UIImageJPEGRepresentation(image, COMPRESSION_QUALITY)
+        val imageData = NSData.dataWithContentsOfFile(path = sandboxPath)
             ?: throw IllegalArgumentException("image data is null")
         val bytes = imageData.bytes ?: throw IllegalArgumentException("image bytes is null")
         val length = imageData.length
-
         val data: CPointer<ByteVar> = bytes.reinterpret()
         return ByteArray(length.toInt()) { index -> data[index] }
     }
 
     override fun toBase64(): String {
-        val imageData = UIImageJPEGRepresentation(image, COMPRESSION_QUALITY)
+        val imageData = NSData.dataWithContentsOfFile(path = sandboxPath)
             ?: throw IllegalArgumentException("image data is null")
-
         return imageData.base64EncodedStringWithOptions(0L.toULong())
     }
 
     @OptIn(ExperimentalForeignApi::class)
     override fun toBase64WithCompress(maxSize: Int): String {
+        val image = UIImage(sandboxPath)
         val imageSize = image.size.useContents { this }
         val scale = minOf(maxSize / imageSize.width, maxSize / imageSize.height)
 

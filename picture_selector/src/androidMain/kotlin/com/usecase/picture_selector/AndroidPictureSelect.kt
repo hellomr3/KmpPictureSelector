@@ -1,7 +1,5 @@
 package com.usecase.picture_selector
 
-import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.activity.ComponentActivity
 import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.SelectMimeType
@@ -22,7 +20,7 @@ import kotlinx.coroutines.flow.catch
  * @date 2024/1/9/009
  * @description
  */
-class PictureSelectImpl constructor(
+class AndroidPictureSelect constructor(
     private val activity: ComponentActivity,
 ) : IPictureSelect {
     override fun takePhoto(params: PictureSelectParams): Flow<Result<List<Media>>> {
@@ -92,7 +90,6 @@ class PictureSelectImpl constructor(
             }
         }
             .catch { e ->
-                Log.e("TAG", "error:$e")
                 emit(Result.failure(e))
             }
     }
@@ -112,11 +109,12 @@ class PictureSelectImpl constructor(
         if (this == null) {
             return null
         }
-        val bitmap = BitmapFactory.decodeFile(this.availablePath)
+        val fileName = this.fileName
+        val path = this.availablePath
         return Media(
-            name = this.fileName,
-            path = this.availablePath,
-            preview = BitmapImpl(BitmapImpl.AndroidDelegate(bitmap))
+            name = fileName,
+            path = path,
+            preview = AndroidBitmap(path)
         )
     }
 }
