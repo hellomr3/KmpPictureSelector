@@ -8,7 +8,7 @@ coroutines = "1.7.3"
 androidxactivity = "1.8.2"
 appcompat = "1.6.1"
 androidPictureSelector = "v3.11.2"
-coil3 = "3.0.0-alpha02"
+coil3 = "3.0.0-alpha03"
 compose-plugin = "1.5.11"
 ktor = "2.3.7"
 [libraries]
@@ -25,7 +25,7 @@ ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "k
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 
 coil3 = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil3" }
-coil3-network = { group = "io.coil-kt.coil3", name = "coil-network", version.ref = "coil3" }
+coil3-network = { group = "io.coil-kt.coil3", name = "coil-network-ktor", version.ref = "coil3" }
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
