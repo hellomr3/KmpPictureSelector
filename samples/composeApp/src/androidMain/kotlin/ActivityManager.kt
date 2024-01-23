@@ -2,7 +2,8 @@
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
+import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
  * @author guoqingshan
@@ -10,11 +11,11 @@ import androidx.appcompat.app.AppCompatActivity
  * @description
  */
 object ActivityManager {
-    private var application: Application? = null
-    private var currentTopActivity: AppCompatActivity? = null
+    private val application:MutableStateFlow<Application?> = MutableStateFlow(null)
+    private val currentTopActivity:MutableStateFlow<ComponentActivity?> = MutableStateFlow(null)
 
     fun init(application: Application) {
-        this.application = application
+        this.application.value = application
         application.registerActivityLifecycleCallbacks(object :
             Application.ActivityLifecycleCallbacks {
 
@@ -27,7 +28,7 @@ object ActivityManager {
             }
 
             override fun onActivityResumed(activity: Activity) {
-                currentTopActivity = activity as? AppCompatActivity
+                currentTopActivity.value = activity as? ComponentActivity
             }
 
             override fun onActivityPaused(activity: Activity) {
@@ -48,7 +49,7 @@ object ActivityManager {
         })
     }
 
-    fun getCurrentActivity(): AppCompatActivity = currentTopActivity!!
+    fun getCurrentActivity(): ComponentActivity= currentTopActivity.value!!
 
-    fun getApp(): Application = application!!
+    fun getApp(): Application = application.value!!
 }

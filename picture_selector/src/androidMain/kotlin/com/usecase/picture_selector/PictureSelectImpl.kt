@@ -2,10 +2,9 @@ package com.usecase.picture_selector
 
 import android.graphics.BitmapFactory
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.SelectMimeType
-import com.luck.picture.lib.engine.CompressFileEngine
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.interfaces.OnResultCallbackListener
 import com.luck.picture.lib.utils.SandboxTransformUtils
@@ -16,9 +15,6 @@ import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
-import top.zibin.luban.Luban
-import top.zibin.luban.OnNewCompressListener
-import java.io.File
 
 
 /**
@@ -27,7 +23,7 @@ import java.io.File
  * @description
  */
 class PictureSelectImpl constructor(
-    private val activity: AppCompatActivity,
+    private val activity: ComponentActivity,
 ) : IPictureSelect {
     override fun takePhoto(params: PictureSelectParams): Flow<Result<List<Media>>> {
         return callbackFlow {
