@@ -7,7 +7,6 @@ import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
-import platform.CoreGraphics.CGFloat
 import platform.Foundation.NSHomeDirectory
 import platform.Foundation.writeToFile
 import platform.UIKit.UIImage
@@ -85,7 +84,7 @@ class PictureSelectImpl constructor(private val currentController: UIViewControl
      */
     private fun save2Sandbox(image: UIImage, present: Double, imageName: String): String {
         val imageData = UIImageJPEGRepresentation(image = image, compressionQuality = present)
-        val fullPath = NSHomeDirectory() + "/Images/" + imageName
+        val fullPath = NSHomeDirectory() + "/Documents/" + imageName
         imageData?.writeToFile(path = fullPath, atomically = true)
         return fullPath
     }

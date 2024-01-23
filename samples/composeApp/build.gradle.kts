@@ -54,6 +54,9 @@ kotlin {
             implementation(compose.components.resources)
 
             api(projects.pictureSelector)
+            api(libs.coil3)
+            api(libs.coil3.compose)
+            api(libs.coil3.network)
         }
 //        desktopMain.dependencies {
 //            implementation(compose.desktop.currentOs)
