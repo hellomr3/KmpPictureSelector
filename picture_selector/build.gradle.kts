@@ -44,6 +44,7 @@ kotlin{
                 implementation(libs.exifInterface)
                 implementation(libs.pictureselector)
                 implementation(libs.pictureselector.compress)
+                implementation(libs.pictureselector.ucrop)
                 implementation(libs.coil3)
                 implementation(libs.coil3.network)
                 implementation(libs.ktor.client.android)

@@ -8,6 +8,7 @@ import com.luck.picture.lib.interfaces.OnResultCallbackListener
 import com.luck.picture.lib.utils.SandboxTransformUtils
 import com.usecase.picture_selector.engine.CoilEngine
 import com.usecase.picture_selector.engine.CompressEngine
+import com.usecase.picture_selector.engine.UCropEngine
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
@@ -34,7 +35,18 @@ class AndroidPictureSelect constructor(
                         call.onCallback(srcPath, sandboxPath)
                     }
                 }
-                .setCompressEngine(CompressEngine(params.maxImageNum))
+                // 裁剪
+                .apply {
+                    if (params.isCrop){
+                        setCropEngine(UCropEngine())
+                    }
+                }
+                // 压缩
+                .apply {
+                    if (params.isCompress){
+                        setCompressEngine(CompressEngine(params.maxFileKbSize.toInt()))
+                    }
+                }
                 .forResult(object : OnResultCallbackListener<LocalMedia?> {
                     override fun onResult(result: ArrayList<LocalMedia?>) {
                         val mediaList = result.mapNotNull { localMedia ->
@@ -70,10 +82,21 @@ class AndroidPictureSelect constructor(
                         call.onCallback(srcPath, sandboxPath)
                     }
                 }
+                // 裁剪
+                .apply {
+                    if (params.isCrop){
+                        setCropEngine(UCropEngine())
+                    }
+                }
+                // 压缩
+                .apply {
+                    if (params.isCompress){
+                        setCompressEngine(CompressEngine(params.maxFileKbSize.toInt()))
+                    }
+                }
                 .setMaxSelectNum(maxNum)
                 .setMaxVideoSelectNum(params.maxVideoNum)
                 .setImageEngine(CoilEngine())
-                .setCompressEngine(CompressEngine(params.maxImageNum))
                 .isWithSelectVideoImage(withSelectVideoImages)
                 .forResult(object : OnResultCallbackListener<LocalMedia?> {
                     override fun onResult(result: ArrayList<LocalMedia?>) {

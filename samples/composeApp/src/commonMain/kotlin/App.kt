@@ -22,7 +22,6 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun App() {
     val scope = rememberCoroutineScope()
@@ -32,7 +31,7 @@ fun App() {
             Button(onClick = {
                 scope.launch {
                     pictureMedia =
-                        pictureSelect.takePhoto(params = PictureSelectParams(maxImageNum = 1))
+                        pictureSelect.takePhoto(params = PictureSelectParams(maxImageNum = 1, isCrop = true))
                             .firstOrNull()
                             ?.getOrNull()?.firstOrNull()
                 }
@@ -59,7 +58,8 @@ fun App() {
                         pictureSelect.selectPhoto(
                             params = PictureSelectParams(
                                 maxImageNum = 1,
-                                maxVideoNum = 1
+                                maxVideoNum = 1,
+                                isCrop = true
                             )
                         ).firstOrNull()
                             ?.getOrNull()?.firstOrNull()
