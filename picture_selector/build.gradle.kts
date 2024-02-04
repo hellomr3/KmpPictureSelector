@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.androidLibrary)
     kotlin("multiplatform")
     kotlin("native.cocoapods")
     id("maven-publish")
