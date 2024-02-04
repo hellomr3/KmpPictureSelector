@@ -57,9 +57,12 @@ class AndroidPictureSelect constructor(
     }
 
     override fun selectPhoto(params: PictureSelectParams): Flow<Result<List<Media>>> {
+        val maxNum = params.maxImageNum + params.maxVideoNum
+        val withSelectVideoImages = params.maxImageNum != 0 || params.maxVideoNum != 0
         return callbackFlow {
             PictureSelector.create(activity)
                 .openGallery(params.asChooseMode())
+                // 文件沙盒
                 .setSandboxFileEngine { context, srcPath, mineType, call ->
                     if (call != null) {
                         val sandboxPath =
@@ -67,11 +70,11 @@ class AndroidPictureSelect constructor(
                         call.onCallback(srcPath, sandboxPath)
                     }
                 }
-                .setMaxSelectNum(params.maxImageNum)
+                .setMaxSelectNum(maxNum)
                 .setMaxVideoSelectNum(params.maxVideoNum)
-//                .setSelectMaxFileSize(params.maxFileKbSize)
                 .setImageEngine(CoilEngine())
                 .setCompressEngine(CompressEngine(params.maxImageNum))
+                .isWithSelectVideoImage(withSelectVideoImages)
                 .forResult(object : OnResultCallbackListener<LocalMedia?> {
                     override fun onResult(result: ArrayList<LocalMedia?>) {
                         val mediaList = result.mapNotNull { localMedia ->
@@ -94,6 +97,9 @@ class AndroidPictureSelect constructor(
             }
     }
 
+    /**
+     * 通过传入的请求参数判断当前模式
+     */
     private fun PictureSelectParams.asChooseMode(): Int {
         require(this.maxImageNum != 0 || this.maxVideoNum != 0)
         return if (this.maxImageNum > 0 && this.maxVideoNum > 0) {

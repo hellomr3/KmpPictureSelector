@@ -32,20 +32,40 @@ fun App() {
             Button(onClick = {
                 scope.launch {
                     pictureMedia =
-                        pictureSelect.takePhoto(params = PictureSelectParams(1)).firstOrNull()
+                        pictureSelect.takePhoto(params = PictureSelectParams(maxImageNum = 1))
+                            .firstOrNull()
                             ?.getOrNull()?.firstOrNull()
                 }
             }) {
-                Text("拍照", modifier = Modifier.padding(24.dp).fillMaxWidth())
+                Text("拍摄照片", modifier = Modifier.padding(horizontal = 24.dp))
             }
             Button(onClick = {
                 scope.launch {
                     pictureMedia =
-                        pictureSelect.selectPhoto(params = PictureSelectParams(1)).firstOrNull()
+                        pictureSelect.takePhoto(
+                            params = PictureSelectParams(
+                                maxImageNum = 0,
+                                maxVideoNum = 2
+                            )
+                        ).firstOrNull()
                             ?.getOrNull()?.firstOrNull()
                 }
             }) {
-                Text("选择图库", modifier = Modifier.padding(24.dp).fillMaxWidth())
+                Text("拍摄视频", modifier = Modifier.padding(horizontal = 24.dp))
+            }
+            Button(onClick = {
+                scope.launch {
+                    pictureMedia =
+                        pictureSelect.selectPhoto(
+                            params = PictureSelectParams(
+                                maxImageNum = 1,
+                                maxVideoNum = 1
+                            )
+                        ).firstOrNull()
+                            ?.getOrNull()?.firstOrNull()
+                }
+            }) {
+                Text("选择图库", modifier = Modifier.padding(horizontal = 24.dp))
             }
             Text("path:${pictureMedia?.path}")
             AsyncImage(
