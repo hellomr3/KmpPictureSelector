@@ -9,7 +9,7 @@ import coil3.request.transformations
 import coil3.transform.RoundedCornersTransformation
 import com.luck.picture.lib.engine.ImageEngine
 import com.luck.picture.lib.utils.ActivityCompatHelper
-import com.usecase.picture_selector.R
+import com.picture_selector.R
 
 /**
  * @author：luck

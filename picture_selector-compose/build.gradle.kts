@@ -1,19 +1,12 @@
 plugins {
     alias(libs.plugins.androidLibrary)
-    kotlin("multiplatform")
-    kotlin("native.cocoapods")
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.jetbrainsCompose)
+
     id("maven-publish")
 }
 
 kotlin{
-//    withSourcesJar(publish = false)
-    cocoapods {
-        version = "1.0.0"
-        ios.deploymentTarget = "12.0"
-        pod("TZImagePickerController/Basic") {
-            version = "~> 3.8.4"
-        }
-    }
     androidTarget {
         compilations.all {
             kotlinOptions {
@@ -36,27 +29,22 @@ kotlin{
         val commonMain by getting {
             dependencies {
                 api(libs.kotlin.coroutines.core)
+                implementation(compose.foundation)
+                api(projects.pictureSelector)
             }
         }
-        val androidMain by getting {
-            dependencies {
+        val androidMain by getting{
+            dependencies{
                 implementation(libs.androidx.appcompat)
-                implementation(libs.exifInterface)
-                implementation(libs.pictureselector)
-                implementation(libs.pictureselector.compress)
-                implementation(libs.pictureselector.ucrop)
-                implementation(libs.coil3)
-                implementation(libs.coil3.network)
-                implementation(libs.ktor.client.android)
             }
         }
     }
 }
 
 android {
-    compileSdk = 34
-    namespace = "com.picture_selector"
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+    compileSdk = 33
+    namespace = "com.picture_selector.compose"
+
     defaultConfig {
         minSdk = 21
     }
@@ -64,7 +52,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-
 }
 
 group="com.hellomr3"

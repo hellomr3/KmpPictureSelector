@@ -53,10 +53,10 @@ kotlin {
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
 
-            api(projects.pictureSelector)
             api(libs.coil3)
             api(libs.coil3.compose)
             api(libs.coil3.network)
+            implementation(projects.pictureSelectorCompose)
         }
 //        desktopMain.dependencies {
 //            implementation(compose.desktop.currentOs)
