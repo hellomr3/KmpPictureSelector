@@ -13,17 +13,21 @@ import platform.Photos.PHAsset
 import platform.Photos.PHAssetResource
 import platform.UIKit.UIImage
 import platform.UIKit.UIImageJPEGRepresentation
+import platform.UIKit.UIImagePNGRepresentation
 import platform.UIKit.UIViewController
 
 @OptIn(ExperimentalForeignApi::class)
 class IOSPictureSelect constructor(private val currentController: UIViewController?) :
     IPictureSelect {
 
+    private var params: PictureSelectParams? = null
+
     override fun takePhoto(params: PictureSelectParams): Flow<Result<List<Media>>> {
         throw NotImplementedError("暂未实现此功能")
     }
 
     override fun selectPhoto(params: PictureSelectParams): Flow<Result<List<Media>>> {
+        this.params = params
         return callbackFlow<Result<List<Media>>> {
             val controller = TZImagePickerController(params.maxImageNum.toLong(), delegate = null)
             controller.didFinishPickingPhotosHandle = { p0, p1, p2 ->
@@ -61,7 +65,10 @@ class IOSPictureSelect constructor(private val currentController: UIViewControll
      * 图片保存到沙盒
      */
     private fun save2Sandbox(image: UIImage, present: Double, imageName: String): String {
-        val imageData = UIImageJPEGRepresentation(image = image, compressionQuality = present)
+        val imageData = if (params?.isCompress == true) UIImageJPEGRepresentation(
+            image = image,
+            compressionQuality = present
+        ) else UIImagePNGRepresentation(image)
         // 注意这里NSHomeDirectory动态变化
         val fullPath = NSHomeDirectory() + "/Documents/" + imageName
         imageData?.writeToFile(path = fullPath, atomically = true)
