@@ -37,13 +37,13 @@ class AndroidPictureSelect constructor(
                 }
                 // 裁剪
                 .apply {
-                    if (params.isCrop){
+                    if (params.isCrop) {
                         setCropEngine(UCropEngine())
                     }
                 }
                 // 压缩
                 .apply {
-                    if (params.isCompress){
+                    if (params.isCompress) {
                         setCompressEngine(CompressEngine(params.maxFileKbSize.toInt()))
                     }
                 }
@@ -84,13 +84,13 @@ class AndroidPictureSelect constructor(
                 }
                 // 裁剪
                 .apply {
-                    if (params.isCrop){
+                    if (params.isCrop) {
                         setCropEngine(UCropEngine())
                     }
                 }
                 // 压缩
                 .apply {
-                    if (params.isCompress){
+                    if (params.isCompress) {
                         setCompressEngine(CompressEngine(params.maxFileKbSize.toInt()))
                     }
                 }

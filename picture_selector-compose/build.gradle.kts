@@ -58,7 +58,9 @@ group="com.hellomr3"
 version = "1.0.0"
 
 publishing {
-    repositories {
-        mavenLocal()
+    publishing{
+        repositories {
+            mavenLocal()
+        }
     }
 }
