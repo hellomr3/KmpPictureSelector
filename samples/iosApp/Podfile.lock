@@ -1,0 +1,27 @@
+PODS:
+  - composeApp (1.0.0)
+  - TZImagePickerController (3.8.4):
+    - TZImagePickerController/Basic (= 3.8.4)
+    - TZImagePickerController/Location (= 3.8.4)
+  - TZImagePickerController/Basic (3.8.4)
+  - TZImagePickerController/Location (3.8.4)
+
+DEPENDENCIES:
+  - composeApp (from `../composeApp`)
+  - TZImagePickerController
+
+SPEC REPOS:
+  trunk:
+    - TZImagePickerController
+
+EXTERNAL SOURCES:
+  composeApp:
+    :path: "../composeApp"
+
+SPEC CHECKSUMS:
+  composeApp: f531a75874c4c8b8de0ea37765bd877096321ec0
+  TZImagePickerController: f1c9f1cae6ac0e30b31aaa9698f9bf4a7cf5b84f
+
+PODFILE CHECKSUM: 5fa1d99568cc5e564da44c1dba8138208bd48a95
+
+COCOAPODS: 1.15.0
