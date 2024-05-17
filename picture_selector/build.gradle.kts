@@ -11,7 +11,7 @@ kotlin{
         version = "1.0.0"
         ios.deploymentTarget = "12.0"
         pod("TZImagePickerController/Basic") {
-            version = "~> 3.8.4"
+            version = "~> 3.8.5"
         }
     }
     androidTarget {

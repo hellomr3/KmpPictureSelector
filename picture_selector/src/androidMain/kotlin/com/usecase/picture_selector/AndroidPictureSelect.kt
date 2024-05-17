@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.catch
 class AndroidPictureSelect constructor(
     private val activity: ComponentActivity,
 ) : IPictureSelect {
-    override fun takePhoto(params: PictureSelectParams): Flow<Result<List<Media>>> {
+    override fun takePhoto(params: PictureSelectParams): Flow<Result<Media?>> {
         return callbackFlow {
             PictureSelector.create(activity)
                 .openCamera(params.asChooseMode())
@@ -52,7 +52,7 @@ class AndroidPictureSelect constructor(
                         val mediaList = result.mapNotNull { localMedia ->
                             localMedia.asMedia()
                         }
-                        trySendBlocking(Result.success(mediaList))
+                        trySendBlocking(Result.success(mediaList.firstOrNull()))
                     }
 
                     override fun onCancel() {

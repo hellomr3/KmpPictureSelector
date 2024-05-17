@@ -9,7 +9,7 @@ Pod::Spec.new do |spec|
     spec.vendored_frameworks      = 'build/cocoapods/framework/picture_selector.framework'
     spec.libraries                = 'c++'
     spec.ios.deployment_target    = '12.0'
-    spec.dependency 'TZImagePickerController/Basic', '~> 3.8.4'
+    spec.dependency 'TZImagePickerController/Basic', '~> 3.8.5'
                 
     if !Dir.exist?('build/cocoapods/framework/picture_selector.framework') || Dir.empty?('build/cocoapods/framework/picture_selector.framework')
         raise "

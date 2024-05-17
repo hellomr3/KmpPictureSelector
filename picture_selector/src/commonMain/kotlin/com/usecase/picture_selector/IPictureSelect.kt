@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
  */
 interface IPictureSelect {
 
-    fun takePhoto(params: PictureSelectParams): Flow<Result<List<Media>>>
+    fun takePhoto(params: PictureSelectParams):Flow<Result<Media?>>
 
     fun selectPhoto(params: PictureSelectParams): Flow<Result<List<Media>>>
 }

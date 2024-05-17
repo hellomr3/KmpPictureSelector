@@ -7,7 +7,10 @@ import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import platform.Foundation.NSDate
 import platform.Foundation.NSHomeDirectory
+import platform.Foundation.date
 import platform.Foundation.writeToFile
 import platform.Photos.PHAsset
 import platform.Photos.PHAssetResource
@@ -22,14 +25,24 @@ class IOSPictureSelect constructor(private val currentController: UIViewControll
 
     private var params: PictureSelectParams? = null
 
-    override fun takePhoto(params: PictureSelectParams): Flow<Result<List<Media>>> {
-        throw NotImplementedError("暂未实现此功能")
+    override fun takePhoto(params: PictureSelectParams): Flow<Result<Media?>> {
+        return flow {
+            val controller = TZImagePickerController()
+            val uiImage = controller.takePictureImage()
+            val media = asMedia(image = uiImage, path = null)
+            emit(Result.success(media))
+        }.catch { e ->
+            emit(Result.failure(e))
+        }
     }
 
     override fun selectPhoto(params: PictureSelectParams): Flow<Result<List<Media>>> {
         this.params = params
         return callbackFlow<Result<List<Media>>> {
-            val controller = TZImagePickerController(params.maxImageNum.toLong(), delegate = null)
+            val controller = TZImagePickerController()
+            controller.maxImagesCount = params.maxImageNum.toLong()
+            controller.allowCrop = params.isCrop
+            controller.allowTakePicture = true
             controller.didFinishPickingPhotosHandle = { p0, p1, p2 ->
                 val images = handleCallback(p0, p1, p2)
                 trySendBlocking(Result.success(images))
@@ -56,7 +69,8 @@ class IOSPictureSelect constructor(private val currentController: UIViewControll
 
     private fun asMedia(image: UIImage?, path: PHAsset?): Media? {
         if (image == null) return null
-        val fileName = path?.getOriginFileName() ?: return null
+        val fileName =
+            path?.getOriginFileName() ?: "photo_${NSDate.date().timeIntervalSinceReferenceDate}.png"
         val sandboxImagePath = save2Sandbox(image = image, present = 1.0, imageName = fileName)
         return Media(fileName, path = sandboxImagePath, IOSBitmap(sandboxImagePath))
     }
