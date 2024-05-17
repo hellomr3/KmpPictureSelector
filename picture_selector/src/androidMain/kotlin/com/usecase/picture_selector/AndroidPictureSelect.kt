@@ -96,6 +96,7 @@ class AndroidPictureSelect constructor(
                 }
                 .setMaxSelectNum(maxNum)
                 .setMaxVideoSelectNum(params.maxVideoNum)
+                .isDisplayCamera(params.allowTakePicture)
                 .setImageEngine(CoilEngine())
                 .isWithSelectVideoImage(withSelectVideoImages)
                 .forResult(object : OnResultCallbackListener<LocalMedia?> {

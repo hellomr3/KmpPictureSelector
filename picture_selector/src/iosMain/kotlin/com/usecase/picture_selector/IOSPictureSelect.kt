@@ -42,7 +42,7 @@ class IOSPictureSelect constructor(private val currentController: UIViewControll
             val controller = TZImagePickerController()
             controller.maxImagesCount = params.maxImageNum.toLong()
             controller.allowCrop = params.isCrop
-            controller.allowTakePicture = true
+            controller.allowTakePicture = params.allowTakePicture
             controller.didFinishPickingPhotosHandle = { p0, p1, p2 ->
                 val images = handleCallback(p0, p1, p2)
                 trySendBlocking(Result.success(images))
