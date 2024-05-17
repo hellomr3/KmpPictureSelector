@@ -20,4 +20,3 @@ dependencyResolutionManagement {
 rootProject.name = "KmmPictureSelect"
 include(":picture_selector")
 include(":picture_selector-compose")
-include(":samples:composeApp")
