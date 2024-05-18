@@ -38,7 +38,7 @@ fun App() {
                             )
                         )
                             .firstOrNull()
-                            ?.getOrNull()?.firstOrNull()
+                            ?.getOrNull()
                 }
             }) {
                 Text("拍摄照片", modifier = Modifier.padding(horizontal = 24.dp))
@@ -52,7 +52,7 @@ fun App() {
                                 maxVideoNum = 2
                             )
                         ).firstOrNull()
-                            ?.getOrNull()?.firstOrNull()
+                            ?.getOrNull()
                 }
             }) {
                 Text("拍摄视频", modifier = Modifier.padding(horizontal = 24.dp))

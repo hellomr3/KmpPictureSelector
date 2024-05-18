@@ -1,15 +1,17 @@
 package com.usecase.picture_selector
 
 import cocoapods.TZImagePickerController.TZImagePickerController
+import com.usecase.picture_selector.delegate.MyUIImagePickerControllerDelegate
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onEach
 import platform.Foundation.NSDate
 import platform.Foundation.NSHomeDirectory
+import platform.Foundation.NSLog
 import platform.Foundation.date
 import platform.Foundation.writeToFile
 import platform.Photos.PHAsset
@@ -26,14 +28,24 @@ class IOSPictureSelect constructor(private val currentController: UIViewControll
     private var params: PictureSelectParams? = null
 
     override fun takePhoto(params: PictureSelectParams): Flow<Result<Media?>> {
-        return flow {
-            val controller = TZImagePickerController()
-            val uiImage = controller.takePictureImage()
-            val media = asMedia(image = uiImage, path = null)
-            emit(Result.success(media))
+        return callbackFlow<Result<Media?>> {
+            // 先检查相机权限
+            if (!checkCameraPermission()) {
+                throw Throwable("没有相机权限")
+            }
+            val delegate = MyUIImagePickerControllerDelegate(viewController = currentController!!) {
+                trySendBlocking(Result.success(asMedia(it, null)))
+            }
+            delegate.takePhoto()
+            awaitClose {
+                NSLog("有结果了？")
+            }
         }.catch { e ->
             emit(Result.failure(e))
         }
+            .onEach {
+                NSLog(it.toString())
+            }
     }
 
     override fun selectPhoto(params: PictureSelectParams): Flow<Result<List<Media>>> {
