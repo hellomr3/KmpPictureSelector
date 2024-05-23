@@ -2,6 +2,7 @@ package com.usecase.picture_selector
 
 import cocoapods.TZImagePickerController.TZImagePickerController
 import com.usecase.picture_selector.delegate.MyUIImagePickerControllerDelegate
+import kotlinx.atomicfu.atomic
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -21,6 +22,9 @@ import platform.UIKit.UIImageJPEGRepresentation
 import platform.UIKit.UIImagePNGRepresentation
 import platform.UIKit.UIViewController
 
+// 需要缓存代理类，否则无法回调结果
+private val cacheDelegate = atomic<MyUIImagePickerControllerDelegate?>(null)
+
 @OptIn(ExperimentalForeignApi::class)
 class IOSPictureSelect constructor(private val currentController: UIViewController?) :
     IPictureSelect {
@@ -33,12 +37,16 @@ class IOSPictureSelect constructor(private val currentController: UIViewControll
             if (!checkCameraPermission()) {
                 throw Throwable("没有相机权限")
             }
-            val delegate = MyUIImagePickerControllerDelegate(viewController = currentController!!) {
+            val delegate = MyUIImagePickerControllerDelegate(
+                viewController = currentController!!,
+                params = params
+            ) {
                 trySendBlocking(Result.success(asMedia(it, null)))
             }
-            delegate.takePhoto()
+            cacheDelegate.getAndSet(delegate)
+            cacheDelegate.value?.takePhoto()
             awaitClose {
-                NSLog("有结果了？")
+                cacheDelegate.getAndSet(null)
             }
         }.catch { e ->
             emit(Result.failure(e))
