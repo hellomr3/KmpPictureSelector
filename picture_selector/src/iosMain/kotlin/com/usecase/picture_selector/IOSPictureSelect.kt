@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onEach
+import platform.Foundation.NSData
 import platform.Foundation.NSDate
 import platform.Foundation.NSHomeDirectory
 import platform.Foundation.NSLog
@@ -32,6 +33,7 @@ class IOSPictureSelect constructor(private val currentController: UIViewControll
     private var params: PictureSelectParams? = null
 
     override fun takePhoto(params: PictureSelectParams): Flow<Result<Media?>> {
+        this.params = params
         return callbackFlow<Result<Media?>> {
             // 先检查相机权限
             if (!checkCameraPermission()) {
@@ -91,22 +93,52 @@ class IOSPictureSelect constructor(private val currentController: UIViewControll
         if (image == null) return null
         val fileName =
             path?.getOriginFileName() ?: "photo_${NSDate.date().timeIntervalSinceReferenceDate}.png"
-        val sandboxImagePath = save2Sandbox(image = image, present = 1.0, imageName = fileName)
+        val sandboxImagePath = save2Sandbox(image = image, imageName = fileName)
         return Media(fileName, path = sandboxImagePath, IOSBitmap(sandboxImagePath))
     }
 
     /**
      * 图片保存到沙盒
      */
-    private fun save2Sandbox(image: UIImage, present: Double, imageName: String): String {
-        val imageData = if (params?.isCompress == true) UIImageJPEGRepresentation(
-            image = image,
-            compressionQuality = present
+    private fun save2Sandbox(image: UIImage, imageName: String): String {
+        val imageData = if (params?.isCompress == true) compressImage(
+            this.params?.maxFileKbSize ?: (1 * 1024 * 1024), image = image
         ) else UIImagePNGRepresentation(image)
         // 注意这里NSHomeDirectory动态变化
         val fullPath = NSHomeDirectory() + "/Documents/" + imageName
         imageData?.writeToFile(path = fullPath, atomically = true)
         return fullPath
+    }
+
+    /**
+     * 处理图片压缩
+     */
+    private fun compressImage(maxLength: Long, image: UIImage): NSData? {
+        var compression = 1.0f
+        var data: NSData =
+            UIImageJPEGRepresentation(image = image, compressionQuality = compression.toDouble())
+                ?: return null
+        if (data.length() < maxLength.toUInt()) {
+            return data
+        }
+        var max = 1f
+        var min = 0f
+        repeat(6) {
+            compression = (max + min) / 2f
+            data = UIImageJPEGRepresentation(
+                UIImage(data),
+                compressionQuality = compression.toDouble()
+            )
+                ?: return null
+            if (data.length() < (maxLength * 0.9).toUInt()) {
+                min = compression
+            } else if (data.length() > maxLength.toUInt()) {
+                max = compression
+            } else {
+                return@repeat
+            }
+        }
+        return data
     }
 
     private fun PHAsset.getOriginFileName(): String? {
