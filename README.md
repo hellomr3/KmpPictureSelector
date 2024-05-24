@@ -28,6 +28,35 @@ IOS平台基于[https://github.com/banchichen/TZImagePickerController](https://g
 
 ## 怎么使用？
 
+### 依赖
+
+```auto
+// setting.gradle.kts
+repositories {
+  maven { url = uri("https://central.sonatype.com") }
+}
+// build.gradle.kts
+val commonMain by getting {
+    dependencies {
+      // 基础能力
+      implementation("io.github.hellomr3:KmpPictureSelector:0.0.1")
+      // compose
+      implementation("io.github.hellomr3:KmpPictureSelectorCompose:0.0.1")
+    }
+} 
+```
+
+### IOS
+
+添加相机和相册权限
+
+```auto
+<key>NSCameraUsageDescription</key>
+<string>需要使用相机</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>需要使用相册</string>
+```
+
 ### 使用原生相机
 
 ```auto
