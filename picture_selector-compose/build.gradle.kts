@@ -6,11 +6,12 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.compose.compiler)
 
     id("com.vanniktech.maven.publish") version "0.28.0"
 }
 
-kotlin{
+kotlin {
     androidTarget {
         compilations.all {
             kotlinOptions {
@@ -37,8 +38,8 @@ kotlin{
                 api(projects.pictureSelector)
             }
         }
-        val androidMain by getting{
-            dependencies{
+        val androidMain by getting {
+            dependencies {
                 implementation(libs.androidx.appcompat)
             }
         }

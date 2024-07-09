@@ -4,7 +4,7 @@ import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
     alias(libs.plugins.androidLibrary)
-    kotlin("multiplatform")
+    alias(libs.plugins.kotlinMultiplatform)
     kotlin("native.cocoapods")
     id("com.vanniktech.maven.publish") version "0.28.0"
 }
