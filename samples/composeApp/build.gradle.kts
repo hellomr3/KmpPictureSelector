@@ -53,8 +53,8 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             // 图片选择器
-            implementation(libs.picture.selector)
-            implementation(libs.picture.selector.compose)
+            implementation(project(":picture_selector"))
+            implementation(project(":picture_selector-compose"))
             // coil3
             implementation(libs.coil3)
             implementation(libs.coil3.compose)
